@@ -25,4 +25,21 @@ class Result(widgets.DOMWidget):
     _view_module_version = Unicode('^0.1.0').tag(sync=True)
     _model_module_version = Unicode('^0.1.0').tag(sync=True)
 
-    
+
+    def model_parameters(self):
+        pass
+
+
+    def tabulated_results(self, input_a, input_b):
+        a = range(input_a)
+        b = range(input_b)
+        df = pd.DataFrame()
+        df['Rad. temp'] = a # change to read values for Rad. temp column
+        df['Ws'] = b # change to read values for Ws column
+        df.index = range(1, len(df)+1)
+        df.index.names = ['Shell']
+        return df
+
+
+    def visualized_results(self):
+        pass
