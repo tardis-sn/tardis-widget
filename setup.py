@@ -43,8 +43,7 @@ URL = metadata.get('url', 'http://astropy.org')
 #   (3) load README.rst,
 #   (4) package docstring
 readme_glob = 'README*'
-_cfg_long_description = metadata.get('long_description', '')
-if _cfg_long_description:
+if _cfg_long_description := metadata.get('long_description', ''):
     LONG_DESCRIPTION = _cfg_long_description
 
 elif os.path.exists('LONG_DESCRIPTION.rst'):
@@ -111,11 +110,11 @@ if conf.has_section('entry_points'):
 # directory name.
 c_files = []
 for root, dirs, files in os.walk(PACKAGENAME):
-    for filename in files:
-        if filename.endswith('.c'):
-            c_files.append(
-                os.path.join(
-                    os.path.relpath(root, PACKAGENAME), filename))
+    c_files.extend(
+        os.path.join(os.path.relpath(root, PACKAGENAME), filename)
+        for filename in files
+        if filename.endswith('.c')
+    )
 package_info['package_data'][PACKAGENAME].extend(c_files)
 
 # Note that requires and provides should not be included in the call to

@@ -20,12 +20,14 @@ npm_path = os.pathsep.join([
 from distutils import log
 log.set_verbosity(log.DEBUG)
 log.info('setup.py entered')
-log.info('$PATH=%s' % os.environ['PATH'])
+log.info(f"$PATH={os.environ['PATH']}")
 
 LONG_DESCRIPTION = 'TARDIS widgets for jupyter notebooks'
 
 def js_prerelease(command, strict=False):
     """decorator for building minified js/css prior to another command"""
+
+
     class DecoratedCommand(command):
         def run(self):
             jsdeps = self.distribution.get_command_obj('jsdeps')
@@ -41,13 +43,15 @@ def js_prerelease(command, strict=False):
                 if strict or missing:
                     log.warn('rebuilding js and css failed')
                     if missing:
-                        log.error('missing files: %s' % missing)
+                        log.error(f'missing files: {missing}')
                     raise e
                 else:
                     log.warn('rebuilding js and css failed (not a problem)')
                     log.warn(str(e))
             command.run(self)
             update_package_data(self.distribution)
+
+
     return DecoratedCommand
 
 def update_package_data(distribution):
@@ -77,11 +81,7 @@ class NPM(Command):
         pass
 
     def get_npm_name(self):
-        npmName = 'npm';
-        if platform.system() == 'Windows':
-            npmName = 'npm.cmd';
-            
-        return npmName;
+        return 'npm.cmd' if platform.system() == 'Windows' else 'npm'
     
     def has_npm(self):
         npmName = self.get_npm_name();
@@ -112,7 +112,7 @@ class NPM(Command):
 
         for t in self.targets:
             if not os.path.exists(t):
-                msg = 'Missing file: %s' % t
+                msg = f'Missing file: {t}'
                 if not has_npm:
                     msg += '\nnpm is required to build a development version of a widget extension'
                 raise ValueError(msg)
